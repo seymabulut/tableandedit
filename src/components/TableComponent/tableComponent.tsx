@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import ColorComponent from "../ColorComponent/colorComponent";
 
 interface Props {
   headers: string[];
@@ -27,7 +28,9 @@ const TableComponent: FC<Props> = ({ headers, tableData, onClick }) => {
           <TableHead>
             <TableRow>
               {headers?.map((header: string) => (
-                <TableCell align="center">{header}</TableCell>
+                <TableCell key={header} align="center">
+                  {header}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -39,12 +42,16 @@ const TableComponent: FC<Props> = ({ headers, tableData, onClick }) => {
               >
                 <TableCell align="center">{row.id}</TableCell>
                 <TableCell align="center">{row.car_id}</TableCell>
-                <TableCell align="center">{String(row.instock)}</TableCell>
+                <TableCell align="center">
+                  {String(row.instock)?.toUpperCase()}
+                </TableCell>
                 <TableCell align="center">{row.hp}</TableCell>
                 <TableCell align="center">
-                  {row.price} {row.currency}
+                  {row.price?.toLocaleString()} {row.currency}
                 </TableCell>
-                <TableCell align="center">{row.color}</TableCell>
+                <TableCell align="center">
+                  <ColorComponent color={row.color} />
+                </TableCell>
                 <TableCell align="center">
                   <Button variant="text" onClick={() => handleEditClick(row)}>
                     EDIT

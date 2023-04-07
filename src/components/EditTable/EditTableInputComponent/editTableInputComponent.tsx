@@ -6,9 +6,14 @@ import "./editTableInputComponent.scss";
 interface Props {
   data: number;
   header: string;
+  onChange: (value: number) => void;
 }
 
-const EditTableInputComponent: FC<Props> = ({ data, header }) => {
+const EditTableInputComponent: FC<Props> = ({ data, header, onChange }) => {
+  const handleChange = (event: any) => {
+    onChange(event?.currentTarget?.value);
+  };
+
   return (
     <div className="edit-table__row">
       <div className="edit-table__column-header">{header}</div>
@@ -21,7 +26,7 @@ const EditTableInputComponent: FC<Props> = ({ data, header }) => {
           noValidate
           autoComplete="off"
         >
-          <TextField variant="standard" value={data} />
+          <TextField variant="standard" value={data} onChange={handleChange} />
         </Box>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 import { TableData } from "../../../interfaces/table";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -17,6 +17,16 @@ interface Props {
 }
 
 const EditTableComponent: FC<Props> = ({ data, onBackClick, onSaveClick }) => {
+  const initialData: TableData = {
+    id: 0,
+    car_id: "",
+    color: "",
+    price: 0,
+    currency: "",
+    instock: false,
+    hp: 0,
+  };
+  const [item, setItem] = useState<TableData>(initialData);
   const headers: Record<string, string> = {
     id: "ID",
     car_id: "CAR ID",
@@ -27,32 +37,76 @@ const EditTableComponent: FC<Props> = ({ data, onBackClick, onSaveClick }) => {
     instock: "INSTOCK",
   };
 
+  useEffect(() => {
+    setItem(data);
+  }, []);
+
+  const handleCheckboxChange = (value: boolean, id: string) => {
+    let temp_data = item;
+    const key = id as keyof TableData;
+    (temp_data[key] as boolean) = value;
+    setItem({ ...temp_data });
+  };
+
+  const handleNumberChange = (value: number, id: string) => {
+    let temp_data = item;
+    const key = id as keyof TableData;
+    (temp_data[key] as number) = value;
+    setItem({ ...temp_data });
+  };
+
+  const handleStringChange = (value: string, id: string) => {
+    let temp_data = item;
+    const key = id as keyof TableData;
+    (temp_data[key] as string) = value;
+    setItem({ ...temp_data });
+  };
+
+  const handleSaveClick = (data: TableData) => {
+    onSaveClick(data);
+  };
+
   return (
     <div className="container">
       <div className="edit-table">
-        <EditTableDisabledComponent data={data?.id} header={headers?.id} />
+        <EditTableDisabledComponent data={item?.id} header={headers?.id} />
         <EditTableDisabledComponent
-          data={data?.car_id}
+          data={item?.car_id}
           header={headers?.car_id}
         />
         <EditTableCheckboxComponent
-          data={data?.instock}
+          data={item?.instock}
           header={headers?.instock}
+          onChange={(value) => handleCheckboxChange(value, "instock")}
         />
-        <EditTableInputComponent data={data?.hp} header={headers?.hp} />
+        <EditTableInputComponent
+          data={item?.hp}
+          header={headers?.hp}
+          onChange={(value) => handleNumberChange(value, "hp")}
+        />
 
-        <EditTableInputComponent data={data?.price} header={headers?.price} />
+        <EditTableInputComponent
+          data={item?.price}
+          header={headers?.price}
+          onChange={(value) => handleNumberChange(value, "price")}
+        />
         <EditTableDisabledComponent
-          data={data?.currency}
+          data={item?.currency}
           header={headers?.currency}
         />
-        <EditTableColorComponent data={data?.color} header={headers?.color} />
+        <EditTableColorComponent
+          data={item?.color}
+          header={headers?.color}
+          onChange={(value) => handleStringChange(value, "color")}
+        />
         <div className="edit-table__buttons">
           <Stack spacing={2} direction="row">
             <Button variant="outlined" onClick={onBackClick}>
               Cancel
             </Button>
-            <Button variant="contained">Save</Button>
+            <Button variant="contained" onClick={() => handleSaveClick(item)}>
+              Save
+            </Button>
           </Stack>
         </div>
       </div>

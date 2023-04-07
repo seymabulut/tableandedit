@@ -9,9 +9,14 @@ import "./editTableColorComponent.scss";
 interface Props {
   data: string;
   header: string;
+  onChange: (value: string) => void;
 }
 
-const EditTableColorComponent: FC<Props> = ({ data, header }) => {
+const EditTableColorComponent: FC<Props> = ({ data, header, onChange }) => {
+  const handleChange = (event: any) => {
+    onChange(event?.target?.value);
+  };
+
   return (
     <div className="edit-table__row">
       <div className="edit-table__column-header">{header}</div>
@@ -19,8 +24,9 @@ const EditTableColorComponent: FC<Props> = ({ data, header }) => {
         <FormControl>
           <RadioGroup
             aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue={data}
+            value={data}
             name="radio-buttons-group"
+            onChange={handleChange}
           >
             {Colors?.map((color: string) => (
               <FormControlLabel
